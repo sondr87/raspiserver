@@ -274,10 +274,10 @@ listen = /run/php/php7.0-fpm.sock
 listen.owner = pi
 listen.group = pi
 pm = static
-pm.max_children = 4
-pm.start_servers = 4
-pm.min_spare_servers = 4
-pm.max_spare_servers = 4
+pm.max_children = 3
+pm.start_servers = 3
+pm.min_spare_servers = 3
+pm.max_spare_servers = 3
 pm.max_requests = 100
 EOF
 
@@ -592,7 +592,8 @@ collation-server      = utf8mb4_general_ci
 [mariadb-10.1]
 EOF
 
-# ToDo: install postfix
+# Install postfix
+apt-get install -y postfix
 
 # Restart services
 service nginx restart
