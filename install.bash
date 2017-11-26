@@ -589,14 +589,13 @@ collation-server      = utf8mb4_general_ci
 [mariadb-10.1]
 EOF
 
-# ???
-#sed -i 's/^bind-address/#bind-address/' /etc/mysql/mysql.conf.d/mysqld.cnf
-#sed -i 's/^skip-networking/#skip-networking/' /etc/mysql/mysql.conf.d/mysqld.cnf
+# ToDo: install postfix
 
 # Restart services
 service nginx restart
 service php7.0-fpm restart
 service mysql restart
+service ssh restart
 
 # Clean dependencies
 apt-get -y autoremove
