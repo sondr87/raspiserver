@@ -7,10 +7,6 @@ if [ "$(whoami)" != "root" ]; then
 	exit
 fi
 
-# Save files
-echo "deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi" > /etc/apt/sources.list.d/stretch.list
-echo "APT::Default-Release \"stretch\";" > /etc/apt/apt.conf.d/99-default-release
-
 # Update
 apt-get update -y
 apt-get upgrade -y
@@ -21,18 +17,15 @@ apt-get install -y rpi-update
 sed -i 's/^#PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 # Install php, php modules, nginx
-apt-get install -t stretch -y php7.0 php7.0-fpm php7.0-cli php7.0-opcache php7.0-mbstring php7.0-curl php7.0-xml php7.0-gd php7.0-mysql php7.0-json php7.0-mcrypt php7.0-xmlrpc php7.0-zip
-apt-get install -t stretch -y nginx
+apt-get install -y php7.0 php7.0-fpm php7.0-cli php7.0-opcache php7.0-mbstring php7.0-curl php7.0-xml php7.0-gd php7.0-mysql php7.0-json php7.0-mcrypt php7.0-xmlrpc php7.0-zip
+apt-get install -y nginx
 
-# ???
+# We can make sure that our web server will restart automatically when the server is rebooted by typing:
 update-rc.d nginx defaults
 update-rc.d php7.0-fpm defaults
 
 # Fix php parameter 
 sed -i 's/^;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/' /etc/php/7.0/fpm/php.ini
-
-# ???
-sed -i 's/# server_names_hash_bucket_size/server_names_hash_bucket_size/' /etc/nginx/nginx.conf
 
 # php.ini [fpm]
 cat > /etc/php/7.0/fpm/php.ini << "EOF"
@@ -388,6 +381,7 @@ server {
 		rewrite  ^(.*)$  /bitrix/urlrewrite.php last;
 	}
 	
+	#
 	location / {
 		try_files $uri $uri/ =404;
 	}
@@ -413,6 +407,7 @@ server {
 EOF
 
 # nginx fixes
+sed -i 's/# server_names_hash_bucket_size/server_names_hash_bucket_size/' /etc/nginx/nginx.conf
 sed -i 's/set $path_info $fastcgi_path_info;/#set $path_info $fastcgi_path_info;/' /etc/nginx/snippets/fastcgi-php.conf
 sed -i 's/fastcgi_param PATH_INFO $path_info;/#fastcgi_param PATH_INFO $path_info;/' /etc/nginx/snippets/fastcgi-php.conf
 
@@ -444,7 +439,7 @@ chown -R pi:pi /var/lib/php/sessions
 rm /var/lib/php/sessions/*
 
 # MariaDB install, set root password, and db permissions
-apt-get -t stretch -y install mariadb-server
+apt-get install -y mariadb-server
 read -s -p "Set mariadb root password: " dbPass
 mysql --user="root" --password="$dbPass" --database="mysql" --execute="GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' IDENTIFIED BY '$dbPass'; FLUSH PRIVILEGES;"
 
@@ -477,6 +472,7 @@ lc-messages-dir	= /usr/share/mysql
 skip-external-locking
 
 sql_mode = 
+default-time-zone = "+03:00"
 
 # Instead of skip-networking the default is now to listen only on
 # localhost which is more compatible and is not less secure.
@@ -538,6 +534,11 @@ max_binlog_size   = 100M
 # InnoDB is enabled by default with a 10MB datafile in /var/lib/mysql/.
 # Read the manual for more InnoDB related options. There are many!
 
+innodb_flush_log_at_trx_commit = 2
+innodb_flush_method=O_DIRECT
+innodb_doublewrite=0
+innodb_support_xa=0
+
 #
 # * Security Features
 #
@@ -588,6 +589,7 @@ collation-server      = utf8mb4_general_ci
 [mariadb-10.1]
 EOF
 
+# ???
 #sed -i 's/^bind-address/#bind-address/' /etc/mysql/mysql.conf.d/mysqld.cnf
 #sed -i 's/^skip-networking/#skip-networking/' /etc/mysql/mysql.conf.d/mysqld.cnf
 
