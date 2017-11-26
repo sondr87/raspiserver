@@ -18,7 +18,7 @@ sed -i 's/^#PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
 
 # Install php, php modules, nginx, tools
 apt-get install -y php7.0 php7.0-fpm php7.0-cli php7.0-opcache php7.0-mbstring php7.0-curl php7.0-xml php7.0-gd php7.0-mysql php7.0-json php7.0-mcrypt php7.0-xmlrpc php7.0-zip
-apt-get install -y nginx
+apt-get install -y nginx nginx-extras
 apt-get install -y mc
 
 # We can make sure that our web server will restart automatically when the server is rebooted by typing:
@@ -47,7 +47,7 @@ expose_php = Off
 max_execution_time = 60
 max_input_time = 60
 max_input_vars = 10000
-memory_limit = 128M
+memory_limit = 256M
 error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
 display_errors = On
 display_startup_errors = On
@@ -339,12 +339,12 @@ http {
 	gzip on;
 	gzip_disable "msie6";
 
-	# gzip_vary on;
-	# gzip_proxied any;
-	# gzip_comp_level 6;
-	# gzip_buffers 16 8k;
-	# gzip_http_version 1.1;
-	# gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+	gzip_vary on;
+	gzip_proxied any;
+	gzip_comp_level 6;
+	gzip_buffers 16 8k;
+	gzip_http_version 1.1;
+	gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
 
 	##
 	# Virtual Host Configs
@@ -496,7 +496,7 @@ myisam_recover_options  = BACKUP
 #
 # * Query Cache Configuration
 #
-query_cache_limit	= 1M
+query_cache_limit	= 16M
 query_cache_size        = 16M
 
 #
@@ -539,6 +539,8 @@ innodb_flush_log_at_trx_commit = 2
 innodb_flush_method=O_DIRECT
 innodb_doublewrite=0
 innodb_support_xa=0
+
+transaction_isolation = READ-COMMITTED
 
 #
 # * Security Features
