@@ -16,9 +16,10 @@ apt-get install -y rpi-update
 # Access login via SSH by ROOT
 sed -i 's/^#PermitRootLogin .*/PermitRootLogin yes/' /etc/ssh/sshd_config
 
-# Install php, php modules, nginx
+# Install php, php modules, nginx, tools
 apt-get install -y php7.0 php7.0-fpm php7.0-cli php7.0-opcache php7.0-mbstring php7.0-curl php7.0-xml php7.0-gd php7.0-mysql php7.0-json php7.0-mcrypt php7.0-xmlrpc php7.0-zip
 apt-get install -y nginx
+apt-get install -y mc
 
 # We can make sure that our web server will restart automatically when the server is rebooted by typing:
 update-rc.d nginx defaults
