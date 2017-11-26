@@ -280,10 +280,10 @@ listen = /run/php/php7.0-fpm.sock
 listen.owner = pi
 listen.group = pi
 pm = static
-pm.max_children = 2
-pm.start_servers = 2
-pm.min_spare_servers = 2
-pm.max_spare_servers = 2
+pm.max_children = 4
+pm.start_servers = 4
+pm.min_spare_servers = 4
+pm.max_spare_servers = 4
 pm.max_requests = 100
 EOF
 
@@ -312,6 +312,7 @@ http {
 	types_hash_max_size 2048;
 	server_tokens off;
 	
+	client_max_body_size 100m;
 
 	fastcgi_buffer_size  128k;
 	fastcgi_buffers  4 256k;
