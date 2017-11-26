@@ -1,26 +1,44 @@
-# raspiserver
+# Скрипт для установки и настройки веб-сервера на Raspberry Pi 3
 
-1. создать microsd с образом Raspbian Stretch. На windows лучший вариант - программа Etcher.
+Устанавливаемые компоненты веб-сервера
+- nginx (веб-сервер),
+- php7.0-fpm, доп. модули для php,
+- mariadb (вместо MySQL),
+- postfix (для отправки почты),
 
-2. в корне файловой системы на microsd создать пустой файл ssh (без расширения).
+## Порядок установки
 
-3. вставить microsd, подключить rapsberry pi к сети, включить. Определить IP (сканером локальной сети, или через статистику на маршрутизаторе). Подключиться по SSH от имени pi (пароль по умолчанию - raspberry).
+1. создать microsd с образом [Raspbian Stretch Lite](https://www.raspberrypi.org/downloads/raspbian/). На windows лучший вариант - программа [Etcher](https://etcher.io/).
 
-3. Сменить пароль pi и root
-		passwd
-		sudo passwd root
+2. в корне файловой системы на microsd создать пустой файл ssh (без расширения) - это дает возможность пользоваться Raspberry Pi 3 через SSH (т.о. нет необходимости в подключении монитора и клавиатуры для настройки).
 
-4. Конфигурировать Raspberry родной утилитой 
-		sudo raspi-config
-			Expand file system
-			Change timezone (Europe/Moscow)
-			Change WiFi country (RU)
-			Change VGA memory (16Mb)
-		reboot
+3. вставить microsd в Raspberry Pi3, подключить к локальной сети через Ethernet-кабель, подключить питание. После загрузки (примерно 20-30 секунд) определить IP (сканером локальной сети, или через статистику на маршрутизаторе). Подключиться по SSH от имени pi (пароль по умолчанию - raspberry).
 
-5. Скачать и установить скрипт настройки сервера
-		wget https://raw.githubusercontent.com/sondr87/raspiserver/master/install.bash
-		sudo bash install.bash
-		в процессе установки потребуется:
-			1) создать пароль для root-пользователя MySQL
-			2) выбрать вариант использования postfix - Internet Suite и ввести hostname сервера
+4. Сменить пароль pi и root
+```bash
+passwd
+sudo passwd root
+```
+
+5. Конфигурировать Raspberry родной утилитой
+```bash
+sudo raspi-config
+```
+Здесь необходимо выполнить:
+- expand file system,
+- изменить часовой пояс (напр., Europe/Moscow),
+- изменить страну для WiFi (напр., RU),
+- изменить память для VGA (напр., 16Mb).
+
+
+6. Скачать и установить скрипт настройки сервера
+```bash
+wget https://raw.githubusercontent.com/sondr87/raspiserver/master/install.bash
+sudo bash install.bash
+```
+В процессе установки скрипт попросит:
+1) создать пароль для root-пользователя MySQL,
+2) выбрать вариант использования postfix - Internet Suite и ввести hostname сервера.
+
+## Веб-сервер и 1С-Битрикс
+Скрипт устанавливает и настраивает сервер по рекомендациям конфигурации для 1С-Битрикс. При проверке сервера php-скриптом [bitrix_server_test.php](https://dev.1c-bitrix.ru/learning/course/index.php?COURSE_ID=32&LESSON_ID=3262&LESSON_PATH=3903.4905.3262) сервер будет успешно пройден, за исключением проверки **.htaccess**, т.к. эта функция относится только к веб-серверу Apache, не устанавливаемому данным скриптом установки.
