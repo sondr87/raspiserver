@@ -48,7 +48,7 @@ max_input_time = 60
 max_input_vars = 10000
 memory_limit = 256M
 error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
-display_errors = On
+display_errors = Off
 display_startup_errors = On
 log_errors = On
 log_errors_max_len = 1024
@@ -86,7 +86,7 @@ pdo_mysql.default_socket=
 [mail function]
 SMTP = localhost
 smtp_port = 25
-mail.add_x_header = On
+mail.add_x_header = Off
 [SQL]
 sql.safe_mode = Off
 [MySQLi]
@@ -166,7 +166,7 @@ expose_php = On
 max_input_vars = 10000
 memory_limit = -1
 error_reporting = E_ALL & ~E_DEPRECATED & ~E_STRICT
-display_errors = On
+display_errors = Off
 display_startup_errors = On
 log_errors = On
 log_errors_max_len = 1024
@@ -203,7 +203,7 @@ pdo_mysql.default_socket=
 [mail function]
 SMTP = localhost
 smtp_port = 25
-mail.add_x_header = On
+mail.add_x_header = Off
 [SQL]
 sql.safe_mode = Off
 [MySQLi]
@@ -364,6 +364,9 @@ server {
 	server_name localhost;
 	root /var/www/default/public;
 	index index.php index.html index.htm default.html;
+
+	add_header X-Frame-Options SAMEORIGIN;
+	add_header X-Content-Type-Options nosniff;
 
 	# deny access to .htaccess files, should an Apache document root conflict with nginx
 	location ~ (/\.ht|/bitrix/modules|/upload/support/not_image) {
