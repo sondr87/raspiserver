@@ -1,5 +1,4 @@
 #!/bin/bash
-# Thanks to https://gist.github.com/Lewiscowles1986/ce14296e3f5222082dbaa088ca1954f7
 
 # Check root
 if [ "$(whoami)" != "root" ]; then
